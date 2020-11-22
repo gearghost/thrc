@@ -1,0 +1,1 @@
+{"appId":"thrc-user","cluster":"default","namespaceName":"application","releaseKey":"20201118172115-b7c1b975b8065507","configurations":{"appid":"thrc.user","env":"dev","mysql-addr":"localhost","mysql-db":"thrc","mysql-password":"","mysql-port":"3306","mysql-username":"root","port":"9091","region":"cn","zone":"gd"}}

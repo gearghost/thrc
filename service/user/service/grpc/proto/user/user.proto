@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option go_package = ".;user";
+
+package user;
+
+service User {
+    rpc CreateUser (UserReq) returns (UserResp){}
+    rpc GetUserByUID(UserReq) returns (UserResp){}
+    rpc GetUserByMobile(UserReq) returns (UserResp){}
+    rpc UpdateUserByUID(UserReq) returns (UserResp){}
+    rpc UpdateUserByMobile(UserReq) returns (UserResp){}
+    rpc UpdateUserByEmail(UserReq) returns (UserResp){}
+    rpc UpdateAvatarByUID(UserReq) returns (UserResp){}
+}
+
+message UserReq{
+    string UserID = 1;
+    string Name =2;
+    string Mobile = 3;
+    string Email = 4;
+    string Sex = 5;
+    string Birthday = 6;
+    string Age = 7;
+    string AvatarURL = 8;
+    string Remark = 9;
+    string RegisterTime = 10;
+    string UpdateTime = 11;
+}
+
+message UserResp{
+    int32 Code = 1;
+    string Message = 2;
+    string Data = 3;
+}

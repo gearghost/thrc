@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: account-service
+  name: account-service    
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: account-service
+  template:
+    metadata:
+      labels:
+        app: account-service
+    spec:
+      hostAliases:
+      - ip: "192.168.64.1"
+        hostnames:
+          - "host.minikube.internal"
+      containers:
+        - name: account-service
+          env:
+            - name: node_name
+              valueFrom:
+               fieldRef:
+                  fieldPath: spec.nodeName
+            - name: node_ip
+              valueFrom:
+               fieldRef:
+                  fieldPath: status.hostIP
+            - name: pod_name
+              valueFrom:
+               fieldRef:
+                 fieldPath: metadata.name
+            - name: pod_ip
+              valueFrom:
+               fieldRef:
+                  fieldPath: status.podIP
+            - name: namespace
+              valueFrom:
+               fieldRef:
+                 fieldPath: metadata.namespace
+          image: thrc/account-service:v1
+          ports:
+            - containerPort: 9090
