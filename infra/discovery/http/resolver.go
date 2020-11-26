@@ -29,7 +29,7 @@ func NewHttpResolver(appcfg *discovery.AppConfig) *HttpResolver {
 	return r
 }
 
-func (r *HttpResolver) Resolve(hosts map[string][]*url.URL) {
+func (r *HttpResolver) BindAndResolve(hosts map[string][]*url.URL) {
 	r.svrHosts = hosts
 	r.disCli.Watch("", r.watch)
 }

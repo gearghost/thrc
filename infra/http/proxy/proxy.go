@@ -38,7 +38,7 @@ func NewProxy(prefix string, r *httpresolver.HttpResolver) *Proxy {
 		reslover: r,
 	}
 	p.Handler = newReverseProxy(prefix, p.targets)
-	p.reslover.Resolve(p.targets)
+	p.reslover.BindAndResolve(p.targets)
 	return p
 }
 
