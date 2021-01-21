@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: account-interface
+  name: http-gateway
 spec:
   selector:
-    app: account-interface
+    app: http-gateway
   ports:
     - name: http
       port: 2233
