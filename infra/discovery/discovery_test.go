@@ -16,13 +16,13 @@ func TestRegister(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	err = d.Register(&NodeConfig{
+	err = d.Register(&NodeInfo{
 		Region:   "cn",
 		Zone:     "gd",
 		Env:      "dev",
 		AppID:    "thrc.test",
 		Hostname: "123456",
-		Addrs:    "127.0.0.1:9090"})
+		Addrs:    []string{"127.0.0.1:9090"}})
 	if err != nil {
 		t.Error(err)
 	}

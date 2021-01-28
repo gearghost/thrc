@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"testing"
@@ -8,7 +9,7 @@ import (
 
 func TestHttpServer(t *testing.T) {
 	server := new(Http)
-	server.Init()
+	server.Init("8080")
 	g := server.Group("/a", testGroup, nil)
 	g.Post("/b", testGroup, nil)
 	g.Get("/c", testGroup, nil)
@@ -18,6 +19,6 @@ func TestHttpServer(t *testing.T) {
 	}
 }
 
-func testGroup(w http.ResponseWriter, r *http.Request) {
+func testGroup(c context.Context, w http.ResponseWriter, r *http.Request) {
 	log.Println(r)
 }
