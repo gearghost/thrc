@@ -8,15 +8,12 @@ import (
 )
 
 func TestHttpServer(t *testing.T) {
-	server := new(Http)
-	server.Init("8080")
+	server := Http{}
+	server.Init("10010")
 	g := server.Group("/a", testGroup, nil)
 	g.Post("/b", testGroup, nil)
 	g.Get("/c", testGroup, nil)
-	err := server.server.ListenAndServe()
-	if err != nil {
-		t.Error(err)
-	}
+	select {}
 }
 
 func testGroup(c context.Context, w http.ResponseWriter, r *http.Request) {

@@ -4,11 +4,13 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"strings"
 	"thrc/infra/jaeger"
 	"time"
 
-	"github.com/opentracing/opentracing-go"
 	"io"
+
+	"github.com/opentracing/opentracing-go"
 )
 
 var (
@@ -32,7 +34,7 @@ type Http struct {
 }
 
 type PathGroup struct {
-	Path   string
+	path   string
 	router *Router
 }
 
@@ -92,40 +94,52 @@ func (h *Http) Init(port string) {
 
 func (h *Http) Post(path string, handler Handler, pre Filter) {
 	h.router.mux[path] = handler
+	filters := []Filter{post}
+	h.router.preFilters[path] = filters
 	if pre != nil {
-		filters := []Filter{pre}
+		filters = append(filters, pre)
 		h.router.preFilters[path] = filters
 	}
 }
 
 func (h *Http) Get(path string, handler Handler, pre Filter) {
 	h.router.mux[path] = handler
+	filters := []Filter{get}
+	h.router.preFilters[path] = filters
 	if pre != nil {
-		filters := []Filter{pre}
+		filters = append(filters, pre)
 		h.router.preFilters[path] = filters
 	}
 }
 
 func (h *Http) Group(path string, handler Handler, pre Filter) *PathGroup {
 	h.router.mux[path] = handler
-	g := &PathGroup{Path: path, router: h.router}
+	g := &PathGroup{path: path, router: h.router}
 	return g
 }
 
+func (g *PathGroup) Path() string {
+	return g.path
+}
+
 func (g *PathGroup) Post(path string, handler Handler, pre Filter) {
-	p := g.Path + path
+	p := g.path + path
 	g.router.mux[p] = handler
+	filters := []Filter{post}
+	g.router.preFilters[p] = filters
 	if pre != nil {
-		filters := []Filter{pre}
+		filters = append(filters, pre)
 		g.router.preFilters[p] = filters
 	}
 }
 
 func (g *PathGroup) Get(path string, handler Handler, pre Filter) {
-	p := g.Path + path
+	p := g.path + path
 	g.router.mux[p] = handler
+	filters := []Filter{get}
+	g.router.preFilters[p] = filters
 	if pre != nil {
-		filters := []Filter{pre}
+		filters = append(filters, pre)
 		g.router.preFilters[p] = filters
 	}
 }
@@ -137,4 +151,20 @@ func (h *Http) AddPreFilter(path string, filter Filter) {
 	}
 	filters = append(filters, filter)
 	h.router.preFilters[path] = filters
+}
+
+func post(ctx context.Context, w http.ResponseWriter, req *http.Request) bool {
+	if strings.ToUpper(req.Method) == "POST" {
+		return true
+	}
+	w.WriteHeader(405) //method not allowed
+	return false
+}
+
+func get(ctx context.Context, w http.ResponseWriter, req *http.Request) bool {
+	if strings.ToUpper(req.Method) == "GET" {
+		return true
+	}
+	w.WriteHeader(405) //method not allowed
+	return false
 }
